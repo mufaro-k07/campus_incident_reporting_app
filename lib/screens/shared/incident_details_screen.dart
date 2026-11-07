@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/formatters.dart';
+import '../../cubits/auth/auth_cubit.dart';
 import '../../cubits/incidents/incidents_cubit.dart';
 import '../../models/incident.dart';
+import '../../widgets/app_button.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/status_timeline.dart';
+import '../staff/update_status_sheet.dart';
 
 class IncidentDetailsScreen extends StatelessWidget {
   const IncidentDetailsScreen({super.key, required this.incidentId});
@@ -32,6 +35,11 @@ class IncidentDetailsScreen extends StatelessWidget {
     final incident = context.select(
       (IncidentsCubit cubit) => cubit.state.findById(incidentId),
     );
+    final isStaff = context.select(
+      (AuthCubit cubit) => cubit.state.user?.isStaff ?? false,
+    );
+    final canUpdateStatus =
+        isStaff && incident != null && incident.status.next != null;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Report details')),
@@ -42,6 +50,9 @@ class IncidentDetailsScreen extends StatelessWidget {
               message: 'This report may have been deleted.',
             )
           : _IncidentDetails(incident: incident),
+      bottomNavigationBar: canUpdateStatus
+          ? _UpdateStatusBar(incident: incident)
+          : null,
     );
   }
 }
@@ -113,6 +124,25 @@ class _IncidentDetails extends StatelessWidget {
           child: StatusTimeline(incident: incident),
         ),
       ],
+    );
+  }
+}
+
+class _UpdateStatusBar extends StatelessWidget {
+  const _UpdateStatusBar({required this.incident});
+
+  final Incident incident;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+        child: AppButton(
+          label: 'Update Status',
+          onPressed: () => UpdateStatusSheet.show(context, incident),
+        ),
+      ),
     );
   }
 }

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/sample_incidents.dart';
+import '../../models/app_user.dart';
 import '../../models/incident.dart';
 import '../../models/incident_category.dart';
 import '../../models/incident_status.dart';
@@ -49,6 +51,23 @@ class IncidentsCubit extends Cubit<IncidentsState> {
   Future<bool> deleteIncident(String incidentId) async {
     try {
       await _incidentRepository.deleteIncident(incidentId);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> addSampleIncidents(AppUser reporter) async {
+    try {
+      for (final sample in sampleIncidents) {
+        await _incidentRepository.createIncident(
+          title: sample.title,
+          description: sample.description,
+          category: sample.category,
+          location: sample.location,
+          reporter: reporter,
+        );
+      }
       return true;
     } catch (_) {
       return false;

@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../cubits/auth/auth_cubit.dart';
+import '../../cubits/incidents/incidents_cubit.dart';
 import '../../models/app_user.dart';
+import '../../widgets/app_snack_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -30,6 +33,18 @@ class ProfileScreen extends StatelessWidget {
     if (shouldSignOut ?? false) await authCubit.signOut();
   }
 
+  Future<void> _addSampleReports(BuildContext context, AppUser user) async {
+    final wasAdded = await context.read<IncidentsCubit>().addSampleIncidents(
+      user,
+    );
+    if (!context.mounted) return;
+    showAppSnackBar(
+      context,
+      wasAdded ? 'Sample reports added.' : 'Could not add sample reports.',
+      isError: !wasAdded,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthCubit cubit) => cubit.state.user);
@@ -45,6 +60,14 @@ class ProfileScreen extends StatelessWidget {
             icon: const Icon(Icons.logout),
             label: const Text('Sign out'),
           ),
+          if (kDebugMode && user != null) ...[
+            const SizedBox(height: 12),
+            TextButton.icon(
+              onPressed: () => _addSampleReports(context, user),
+              icon: const Icon(Icons.science_outlined),
+              label: const Text('Add sample reports (debug only)'),
+            ),
+          ],
         ],
       ),
     );

@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// Development rules: the same as firestore.rules but without the ALU email
+// check, so a personal email can be used while testing.
+// Never leave these deployed for the demo.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function verified() {
+      return signedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isStaff() {
+      return verified()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'staff';
+    }
+
+    function changesOnly(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    match /users/{userId} {
+      allow read: if verified() && (request.auth.uid == userId || isStaff());
+
+      allow create: if verified()
+        && request.auth.uid == userId
+        && request.resource.data.role == 'student';
+
+      allow update: if verified()
+        && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role;
+    }
+
+    match /incidents/{incidentId} {
+      allow read: if verified();
+
+      allow create: if verified()
+        && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.status == 'submitted';
+
+      allow update: if (isStaff()
+          && changesOnly(['status', 'statusHistory', 'updatedAt']))
+        || (verified()
+          && resource.data.reporterId == request.auth.uid
+          && resource.data.status == 'submitted'
+          && changesOnly(['title', 'description', 'category', 'location', 'photoUrl', 'updatedAt']));
+
+      allow delete: if verified()
+        && resource.data.reporterId == request.auth.uid
+        && resource.data.status == 'submitted';
+    }
+  }
+}

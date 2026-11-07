@@ -45,3 +45,11 @@ CLAUDE.md says sign-up creates `users/{uid}`, but the security rules only let ve
 ## Live role changes (2026-11-07)
 
 `AuthCubit` listens to the user's Firestore document, not just the login state. When `role` is changed in the Firebase Console, the app switches between the student and staff screens straight away. This makes it possible to show both roles in the demo with one account.
+
+## Security rules (2026-11-07)
+
+`firestore.rules` is the strict version: only verified `@alustudent.com` and `@alueducation.com` accounts can read or write. Only staff can change `status`, `statusHistory` and `updatedAt`, checked with `diff().affectedKeys().hasOnly()`. A reporter can edit or delete their own report only while it is `submitted`, and nobody can change their own role. `firestore.dev.rules` is the same without the email domain check, and `firebase.dev.json` deploys it. I checked the deployed strict rules with 12 requests through the Firestore REST API (for example, a student changing a status gets 403 and a verified non-ALU account cannot read anything). All 12 gave the expected result.
+
+## devAllowAnyEmail switched off (2026-11-07)
+
+`devAllowAnyEmail` is now `false` and the strict rules are deployed. A non-ALU email now gets "Use your ALU email" on the login and sign-up forms, and the rules refuse it on the server even if the app check were skipped.

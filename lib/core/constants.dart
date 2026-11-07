@@ -4,7 +4,7 @@ const allowedEmailDomains = ['alustudent.com', 'alueducation.com'];
 
 // Lets a personal email register while testing. It only works in debug
 // builds, and must be false before recording the demo.
-const devAllowAnyEmail = true;
+const devAllowAnyEmail = false;
 
 const allowAnyEmailDomain = devAllowAnyEmail && kDebugMode;
 

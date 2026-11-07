@@ -21,8 +21,8 @@ class AuthHeader extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 40,
-          backgroundColor: AppColors.primaryLight,
-          child: Icon(icon, size: 40, color: AppColors.primary),
+          backgroundColor: AppColors.royalBlueLight,
+          child: Icon(icon, size: 40, color: AppColors.royalBlue),
         ),
         const SizedBox(height: 20),
         Text(

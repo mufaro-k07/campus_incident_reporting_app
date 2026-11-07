@@ -75,10 +75,10 @@ class _CategoryIcon extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: AppColors.primaryLight,
+        color: AppColors.royalBlueLight,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(icon, color: AppColors.primary),
+      child: Icon(icon, color: AppColors.royalBlue),
     );
   }
 }

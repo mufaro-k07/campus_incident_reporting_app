@@ -11,10 +11,10 @@ void main() {
 
   final incident = Incident(
     id: 'incident-1',
-    title: 'Broken tap in Block B',
+    title: 'Broken tap in the Learning Commons',
     description: 'The tap in the second floor bathroom keeps running.',
     category: IncidentCategory.water,
-    location: 'Block B',
+    location: 'Learning Commons',
     status: IncidentStatus.inProgress,
     reporterId: 'student-1',
     reporterName: 'Test Student',

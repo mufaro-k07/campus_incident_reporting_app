@@ -30,9 +30,9 @@ void main() {
   Future<String> createLeakingTap() async {
     await repository.createIncident(
       title: 'Leaking tap',
-      description: 'The tap in Block B will not stop running.',
+      description: 'The tap in the Learning Commons will not stop running.',
       category: IncidentCategory.water,
-      location: 'Block B',
+      location: 'Learning Commons',
       reporter: student,
     );
     final incidents = await repository.watchIncidents().first;
@@ -73,9 +73,9 @@ void main() {
     await repository.updateIncident(
       incidentId: incidentId,
       title: 'Leaking tap on floor 2',
-      description: 'The tap in Block B will not stop running.',
+      description: 'The tap in the Learning Commons will not stop running.',
       category: IncidentCategory.water,
-      location: 'Block B',
+      location: 'Learning Commons',
     );
     final edited = (await repository.watchIncidents().first).single;
     expect(edited.title, 'Leaking tap on floor 2');

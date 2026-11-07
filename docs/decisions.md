@@ -57,3 +57,11 @@ CLAUDE.md says sign-up creates `users/{uid}`, but the security rules only let ve
 ## Testing approach (2026-11-07)
 
 Pure Dart code (validators, the filter function and the models) has plain unit tests. Cubits are tested with `bloc_test` and fake repositories from `mocktail`, so no network is needed. `IncidentRepository` is tested against `fake_cloud_firestore`, which also checks the status history update. The report form has a widget test. The security rules were checked against the real deployed database through the REST API, and every screen was tried on the Android emulator with a student account and a staff account.
+
+## New colour palette (2026-11-07)
+
+I replaced the teal and sand palette with royal blue (`#1A0088`), tangerine (`#FF5E32`), lime (`#B6CF4F`) and cream (`#EFE7D4`). Royal blue is the main colour because white text on it is easy to read. White text on tangerine is only about 3:1 and on lime below 2:1, so text on those colours is royal blue or black, and the raised Report button keeps only a white icon. The error colour (`#B3261E`) is kept outside the palette so an error never looks like a tangerine highlight. Because every colour lives in `app_colors.dart`, the change only touched the colour tokens and a few widgets, not every screen.
+
+## Alerts tab and balanced bottom bar (2026-11-07)
+
+The student bottom bar now has four items, two on each side of the Report button: Home and Reports, then Alerts and Profile. Every item has the same fixed width and the Row uses `spaceBetween`, so the Report button sits exactly in the centre. Tabs are an enum (`StudentTab`) instead of plain numbers, so `_selectTab(StudentTab.alerts)` reads better than `_selectTab(2)`. Alerts are built on the phone from the `statusHistory` of my own reports, because push notifications would need Cloud Functions, which need the paid Blaze plan.

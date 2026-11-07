@@ -90,13 +90,15 @@ class _AddPhotoButton extends StatelessWidget {
             children: [
               const Icon(
                 Icons.add_a_photo_outlined,
-                color: AppColors.primary,
+                color: AppColors.royalBlue,
                 size: 32,
               ),
               const SizedBox(height: 8),
               Text(
                 'Add a photo',
-                style: textTheme.labelLarge?.copyWith(color: AppColors.primary),
+                style: textTheme.labelLarge?.copyWith(
+                  color: AppColors.royalBlue,
+                ),
               ),
               Text(
                 'Optional, up to 5 MB',

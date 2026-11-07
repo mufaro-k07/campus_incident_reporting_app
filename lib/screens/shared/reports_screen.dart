@@ -61,8 +61,8 @@ class _AllOrMineSwitch extends StatelessWidget {
     return SegmentedButton<bool>(
       showSelectedIcon: false,
       style: SegmentedButton.styleFrom(
-        selectedBackgroundColor: AppColors.primaryLight,
-        selectedForegroundColor: AppColors.primaryDark,
+        selectedBackgroundColor: AppColors.lime,
+        selectedForegroundColor: AppColors.royalBlue,
       ),
       segments: const [
         ButtonSegment(value: false, label: Text('All')),
@@ -97,11 +97,11 @@ class _MyReportsHeader extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 24,
-              backgroundColor: AppColors.primaryLight,
+              backgroundColor: AppColors.royalBlueLight,
               child: Text(
                 user?.initials ?? '',
                 style: const TextStyle(
-                  color: AppColors.primary,
+                  color: AppColors.royalBlue,
                   fontWeight: FontWeight.w700,
                 ),
               ),

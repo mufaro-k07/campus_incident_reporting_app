@@ -32,7 +32,7 @@ void main() {
     id: '1',
     title: 'Leaking tap',
     category: IncidentCategory.water,
-    location: 'Block B',
+    location: 'Learning Commons',
   );
   final brokenLight = makeIncident(
     id: '2',
@@ -74,7 +74,7 @@ void main() {
 
   test('search ignores case and looks at title, location and category', () {
     expect(filterIncidents(all, searchText: 'TAP'), [leakingTap]);
-    expect(filterIncidents(all, searchText: 'block b'), [leakingTap]);
+    expect(filterIncidents(all, searchText: 'learning commons'), [leakingTap]);
     expect(filterIncidents(all, searchText: 'electricity'), [brokenLight]);
   });
 

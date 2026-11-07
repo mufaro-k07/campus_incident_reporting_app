@@ -72,7 +72,7 @@ class _TimelineStep extends StatelessWidget {
                     child: Container(
                       width: 2,
                       color: isNextReached
-                          ? AppColors.primary
+                          ? AppColors.royalBlue
                           : AppColors.border,
                     ),
                   ),
@@ -108,9 +108,9 @@ class _StepDot extends StatelessWidget {
       height: 24,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isReached ? AppColors.primary : AppColors.surface,
+        color: isReached ? AppColors.royalBlue : AppColors.surface,
         border: Border.all(
-          color: isReached ? AppColors.primary : AppColors.border,
+          color: isReached ? AppColors.royalBlue : AppColors.border,
           width: 2,
         ),
       ),
@@ -163,7 +163,7 @@ class _StepDetails extends StatelessWidget {
             margin: const EdgeInsets.only(top: 8),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.sand.withValues(alpha: 0.3),
+              color: AppColors.cream,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text('Staff note: $note', style: textTheme.bodyMedium),

@@ -12,7 +12,7 @@ void showAppSnackBar(
     ..showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? AppColors.accentDark : AppColors.primaryDark,
+        backgroundColor: isError ? AppColors.error : AppColors.primaryEnd,
       ),
     );
 }

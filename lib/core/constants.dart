@@ -13,18 +13,18 @@ const cloudinaryUploadPreset = 'incident_photos_unsigned';
 
 const maxPhotoBytes = 5 * 1024 * 1024;
 
-// Placeholder names. Replace them with the real campus buildings.
 const campusLocations = [
-  'Main Building',
-  'Block A',
-  'Block B',
-  'Block C',
-  'Block D',
+  'Learning Commons',
+  'Social Commons',
+  'Enterprise Commons',
+  'Leadership Center',
   'Library',
-  'Cafeteria',
+  'Study Pods',
   'Auditorium',
-  'Hostel',
-  'Sports Field',
+  'Cafeteria',
+  'Basketball Court',
+  'Wellness Center',
+  'Faculty Office',
   'Parking',
   'Other',
 ];

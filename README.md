@@ -13,6 +13,7 @@ Built with Flutter, Firebase Authentication, Cloud Firestore, Cloudinary (photos
 - See the details of a report, including a status timeline with staff notes.
 - Edit or delete your own report while it is still **Submitted**.
 - Home screen with a summary of your reports and your most recent ones.
+- **Alerts** tab with every staff status update on your own reports, newest first, including staff notes.
 
 **Staff**
 - Dashboard with counts by status and every report, newest first, with the same search and filters.
@@ -35,9 +36,9 @@ Built with Flutter, Firebase Authentication, Cloud Firestore, Cloudinary (photos
 |---|---|---|
 | ![Timeline](screenshots/06b_timeline.png) | ![Profile](screenshots/07_profile.png) | ![Dashboard](screenshots/08_staff_dashboard.png) |
 
-| Update status (staff) |
-|---|
-| ![Update status](screenshots/09_update_status.png) |
+| Update status (staff) | Alerts |
+|---|---|
+| ![Update status](screenshots/09_update_status.png) | ![Alerts](screenshots/10_alerts.png) |
 
 ## Architecture
 
@@ -177,6 +178,7 @@ flutter test
 | `validators_test.dart` | Email domain, password, name, title and description validation |
 | `incident_model_test.dart` | `Incident` and `StatusChange` `toMap` / `fromMap`, fallbacks, status order |
 | `incident_filter_test.dart` | Search and status/category/Mine filters |
+| `status_alerts_test.dart` | Alerts list only my reports' staff updates, newest first |
 | `incident_repository_test.dart` | Create, status update with history, edit and delete (uses `fake_cloud_firestore`) |
 | `image_upload_service_test.dart` | Cloudinary upload returns `secure_url` and fails on errors |
 | `auth_cubit_test.dart` | Unauthenticated, unverified, live role change, login error message |
@@ -198,4 +200,3 @@ With one student account and one staff account:
 - Photos are uploaded with an unsigned Cloudinary preset, which cannot delete files. Deleting a report leaves its photo in Cloudinary.
 - Search runs on the reports already loaded on the phone, because Firestore has no full-text search. This is fine for one campus but would need a search service for a large dataset.
 - Times inside the status history come from the phone's clock, because Firestore does not allow `serverTimestamp()` inside arrays.
-- The campus locations in `lib/core/constants.dart` are placeholders.

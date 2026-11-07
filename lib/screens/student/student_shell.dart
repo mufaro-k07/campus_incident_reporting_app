@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/profile_screen.dart';
 import '../shared/reports_screen.dart';
+import 'alerts_screen.dart';
 import 'home_screen.dart';
 import 'report_incident_screen.dart';
+
+// The order must match the pages in the IndexedStack below, because
+// `tab.index` is used to pick the page.
+enum StudentTab { home, reports, alerts, profile }
 
 class StudentShell extends StatefulWidget {
   const StudentShell({super.key});
@@ -14,20 +19,21 @@ class StudentShell extends StatefulWidget {
 }
 
 class _StudentShellState extends State<StudentShell> {
-  int _selectedTab = 0;
+  StudentTab _selectedTab = StudentTab.home;
 
-  void _selectTab(int index) {
-    setState(() => _selectedTab = index);
+  void _selectTab(StudentTab tab) {
+    setState(() => _selectedTab = tab);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: _selectedTab,
+        index: _selectedTab.index,
         children: [
-          HomeScreen(onSeeAllReports: () => _selectTab(1)),
+          HomeScreen(onSeeAllReports: () => _selectTab(StudentTab.reports)),
           const ReportsScreen(),
+          const AlertsScreen(),
           const ProfileScreen(),
         ],
       ),
@@ -51,8 +57,8 @@ class _StudentNavigationBar extends StatelessWidget {
     required this.onTabSelected,
   });
 
-  final int selectedTab;
-  final ValueChanged<int> onTabSelected;
+  final StudentTab selectedTab;
+  final ValueChanged<StudentTab> onTabSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -60,24 +66,42 @@ class _StudentNavigationBar extends StatelessWidget {
       color: AppColors.surface,
       shape: const CircularNotchedRectangle(),
       notchMargin: 8,
-      padding: EdgeInsets.zero,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: Row(
-              children: [
-                _navItem(0, Icons.home_outlined, Icons.home, 'Home'),
-                _navItem(1, Icons.list_alt_outlined, Icons.list_alt, 'Reports'),
-              ],
-            ),
+          _NavPair(
+            children: [
+              _navItem(
+                StudentTab.home,
+                Icons.home_outlined,
+                Icons.home,
+                'Home',
+              ),
+              _navItem(
+                StudentTab.reports,
+                Icons.list_alt_outlined,
+                Icons.list_alt,
+                'Reports',
+              ),
+            ],
           ),
           const _ReportLabel(),
-          Expanded(
-            child: Row(
-              children: [
-                _navItem(2, Icons.person_outline, Icons.person, 'Profile'),
-              ],
-            ),
+          _NavPair(
+            children: [
+              _navItem(
+                StudentTab.alerts,
+                Icons.notifications_outlined,
+                Icons.notifications,
+                'Alerts',
+              ),
+              _navItem(
+                StudentTab.profile,
+                Icons.person_outline,
+                Icons.person,
+                'Profile',
+              ),
+            ],
           ),
         ],
       ),
@@ -85,20 +109,29 @@ class _StudentNavigationBar extends StatelessWidget {
   }
 
   Widget _navItem(
-    int index,
+    StudentTab tab,
     IconData icon,
     IconData selectedIcon,
     String label,
   ) {
-    return Expanded(
-      child: _NavItem(
-        icon: icon,
-        selectedIcon: selectedIcon,
-        label: label,
-        isSelected: selectedTab == index,
-        onTap: () => onTabSelected(index),
-      ),
+    return _NavItem(
+      icon: icon,
+      selectedIcon: selectedIcon,
+      label: label,
+      isSelected: selectedTab == tab,
+      onTap: () => onTabSelected(tab),
     );
+  }
+}
+
+class _NavPair extends StatelessWidget {
+  const _NavPair({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisSize: MainAxisSize.min, children: children);
   }
 }
 
@@ -108,6 +141,7 @@ class _ReportLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      // Wide enough for the 56 dp button plus the notch around it.
       width: 80,
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -117,7 +151,7 @@ class _ReportLabel extends StatelessWidget {
             child: Text(
               'Report',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: AppColors.accentDark,
+                color: AppColors.royalBlue,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -137,6 +171,11 @@ class _NavItem extends StatelessWidget {
     required this.onTap,
   });
 
+  // Every item has the same width, so both pairs are the same size and
+  // the Report button stays exactly in the centre. 4 x 64 + 80 fits a
+  // 360 dp wide phone.
+  static const double width = 64;
+
   final IconData icon;
   final IconData selectedIcon;
   final String label;
@@ -145,13 +184,14 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? AppColors.primary : AppColors.textSecondary;
+    final color = isSelected ? AppColors.royalBlue : AppColors.textSecondary;
     return Semantics(
       selected: isSelected,
       button: true,
       child: InkResponse(
         onTap: onTap,
         child: SizedBox(
+          width: width,
           height: 64,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -160,6 +200,8 @@ class _NavItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: color,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,

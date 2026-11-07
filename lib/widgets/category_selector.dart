@@ -38,7 +38,7 @@ class CategorySelector extends StatelessWidget {
             child: Text(
               errorText!,
               style: Theme.of(context).textTheme.bodySmall
-                  ?.copyWith(color: AppColors.accentDark),
+                  ?.copyWith(color: AppColors.error),
             ),
           ),
       ],
@@ -63,11 +63,11 @@ class _CategoryTile extends StatelessWidget {
       button: true,
       selected: isSelected,
       child: Material(
-        color: isSelected ? AppColors.primaryLight : AppColors.surface,
+        color: isSelected ? AppColors.lime : AppColors.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(
-            color: isSelected ? AppColors.primary : AppColors.border,
+            color: isSelected ? AppColors.royalBlue : AppColors.border,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -80,7 +80,7 @@ class _CategoryTile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(category.icon, color: AppColors.primary),
+                Icon(category.icon, color: AppColors.royalBlue),
                 const SizedBox(height: 6),
                 Text(
                   category.label,

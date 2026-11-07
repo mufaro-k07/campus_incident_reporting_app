@@ -17,17 +17,17 @@ class SampleIncident {
 // Example reports for demos and testing. Only added from a debug build.
 const sampleIncidents = [
   SampleIncident(
-    title: 'Flickering lights in Block A',
-    description:
-        'The ceiling lights in the Block A corridor flicker all evening.',
+    title: 'Flickering lights in the Learning Commons',
+    description: 'The ceiling lights near the stairs flicker all evening.',
     category: IncidentCategory.electricity,
-    location: 'Block A',
+    location: 'Learning Commons',
   ),
   SampleIncident(
-    title: 'No water in Hostel showers',
-    description: 'The second floor showers have had no water since morning.',
+    title: 'No water in the Wellness Center sinks',
+    description:
+        'The sinks in the Wellness Center have had no water since morning.',
     category: IncidentCategory.water,
-    location: 'Hostel',
+    location: 'Wellness Center',
   ),
   SampleIncident(
     title: 'Broken desk in the Library',
@@ -54,15 +54,15 @@ const sampleIncidents = [
     location: 'Auditorium',
   ),
   SampleIncident(
-    title: 'Projector not working in Block C',
-    description: 'The projector in room C2 does not turn on.',
+    title: 'Projector not working in the Enterprise Commons',
+    description: 'The projector in the meeting room does not turn on.',
     category: IncidentCategory.electricity,
-    location: 'Block C',
+    location: 'Enterprise Commons',
   ),
   SampleIncident(
-    title: 'Goal net torn on the Sports Field',
-    description: 'The net on the north goal is torn and hanging down.',
+    title: 'Torn net on the Basketball Court',
+    description: 'The net on the north hoop is torn and hanging down.',
     category: IncidentCategory.other,
-    location: 'Sports Field',
+    location: 'Basketball Court',
   ),
 ];

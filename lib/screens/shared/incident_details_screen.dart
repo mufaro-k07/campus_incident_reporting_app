@@ -223,17 +223,17 @@ class _IncidentPhoto extends StatelessWidget {
           loadingBuilder: (context, child, progress) {
             if (progress == null) return child;
             return const ColoredBox(
-              color: AppColors.primaryLight,
+              color: AppColors.royalBlueLight,
               child: Center(child: CircularProgressIndicator()),
             );
           },
           errorBuilder: (context, error, stackTrace) => const ColoredBox(
-            color: AppColors.primaryLight,
+            color: AppColors.royalBlueLight,
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.broken_image_outlined, color: AppColors.primary),
+                  Icon(Icons.broken_image_outlined, color: AppColors.royalBlue),
                   SizedBox(height: 4),
                   Text('The photo could not be loaded'),
                 ],
@@ -295,7 +295,7 @@ class _InfoRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.secondary),
+          Icon(icon, size: 20, color: AppColors.primaryEnd),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

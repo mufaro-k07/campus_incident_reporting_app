@@ -23,7 +23,7 @@ void main() {
     title: 'Leaking tap',
     description: 'The tap will not stop running.',
     category: IncidentCategory.water,
-    location: 'Block B',
+    location: 'Learning Commons',
     status: IncidentStatus.submitted,
     reporterId: 'student-1',
     reporterName: 'Test Student',

@@ -95,11 +95,11 @@ class _Greeting extends StatelessWidget {
         ),
         CircleAvatar(
           radius: 24,
-          backgroundColor: AppColors.primaryLight,
+          backgroundColor: AppColors.royalBlueLight,
           child: Text(
             user?.initials ?? '',
             style: const TextStyle(
-              color: AppColors.primary,
+              color: AppColors.royalBlue,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -121,7 +121,7 @@ class _ReportBanner extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primaryDark],
+          colors: [AppColors.royalBlue, AppColors.primaryEnd],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -151,7 +151,7 @@ class _ReportBanner extends StatelessWidget {
                 FilledButton(
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.surface,
-                    foregroundColor: AppColors.primary,
+                    foregroundColor: AppColors.royalBlue,
                     minimumSize: const Size(0, 48),
                   ),
                   onPressed: onReport,
@@ -165,7 +165,7 @@ class _ReportBanner extends StatelessWidget {
             child: Icon(
               Icons.campaign_outlined,
               size: 72,
-              color: AppColors.primaryLight,
+              color: AppColors.royalBlueLight,
             ),
           ),
         ],

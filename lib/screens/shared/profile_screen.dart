@@ -89,11 +89,11 @@ class _ProfileCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundColor: AppColors.primaryLight,
+              backgroundColor: AppColors.royalBlueLight,
               child: Text(
                 user.initials,
                 style: textTheme.headlineSmall?.copyWith(
-                  color: AppColors.primary,
+                  color: AppColors.royalBlue,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -133,13 +133,13 @@ class _RoleBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: user.isStaff ? AppColors.primary : AppColors.primaryLight,
+        color: user.isStaff ? AppColors.royalBlue : AppColors.royalBlueLight,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         user.roleLabel,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: user.isStaff ? AppColors.surface : AppColors.primaryDark,
+          color: user.isStaff ? AppColors.surface : AppColors.primaryEnd,
           fontWeight: FontWeight.w600,
         ),
       ),

@@ -110,20 +110,21 @@ void main() {
     );
     await tester.enterText(
       find.widgetWithText(TextFormField, 'Description'),
-      'The tap in the Block B bathroom will not stop running.',
+      'The tap in the Learning Commons bathroom will not stop running.',
     );
     await tester.tap(find.text('Location'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Block B').last);
+    await tester.tap(find.text('Learning Commons').last);
     await tester.pumpAndSettle();
     await tapSubmit(tester);
 
     verify(
       () => incidentRepository.createIncident(
         title: 'Leaking tap',
-        description: 'The tap in the Block B bathroom will not stop running.',
+        description:
+            'The tap in the Learning Commons bathroom will not stop running.',
         category: IncidentCategory.water,
-        location: 'Block B',
+        location: 'Learning Commons',
         reporter: reporter,
         photoUrl: null,
       ),

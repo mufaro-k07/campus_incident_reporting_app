@@ -1,0 +1,35 @@
+# Technical decisions and problems
+
+A short log of the technical decisions made while building the app and the problems met along the way.
+
+## Cubit for state management (2026-11-07)
+
+I chose Cubit from `flutter_bloc` because it keeps the logic out of the widgets with fewer concepts than Riverpod or full Bloc. A Cubit has plain methods instead of events, which is easier to explain. If the app grew much larger, event-based Bloc could give better tracing of what happened.
+
+## Cloudinary instead of Firebase Storage (2026-11-07)
+
+Firebase Storage needs the paid Blaze plan, and I cannot link a card. The class representative approved using another cloud service, so photos go to Cloudinary through an unsigned upload preset and only the photo URL is saved in Firestore. Limitation: unsigned uploads cannot be deleted from the app, so deleting a report leaves its photo in Cloudinary.
+
+## Client-side search (2026-11-07)
+
+Firestore has no full-text search, so the app filters the incidents it has already loaded. This is fine for a small campus dataset. A large dataset would need a search service such as Algolia or Typesense.
+
+## Roles in Firestore, enforced by security rules (2026-11-07)
+
+Each user has a `role` field in `users/{uid}`. Everyone signs up as a student and staff are promoted manually in the Firebase Console. The security rules check this role, so hiding buttons in the UI is not the only protection.
+
+## ALU emails and verification (2026-11-07)
+
+Only `@alustudent.com` and `@alueducation.com` addresses can register, and the email must be verified before the app opens. `devAllowAnyEmail` and a separate dev rules file exist only for testing with a personal email. Both must be off for the demo.
+
+## Emulator needed virtualisation (2026-11-07)
+
+The Android emulator would not start until virtualisation was enabled in the BIOS. This cost setup time. Checking the BIOS setting first would have saved it.
+
+## equatable 2 instead of 3 (2026-11-07)
+
+`fake_cloud_firestore` (used in tests) only works with `equatable` below version 3 when used with `cloud_firestore` 7. I pinned `equatable` to `^2.1.0`. The parts of `equatable` the app uses are the same in both versions.
+
+## Build failed because of a space in the Flutter path (2026-11-07)
+
+The first build failed with "Building native assets failed". The Flutter SDK is in `C:\Users\Petros Kunze\flutter`, and the space in the path breaks a build step of the `objective_c` package. That package comes from `path_provider_foundation`, an iOS/macOS plugin pulled in by `google_fonts`. I pinned `path_provider_foundation` to 2.5.1, which does not use `objective_c`. Installing Flutter in a path without spaces (for example `C:\flutter`) would avoid this.

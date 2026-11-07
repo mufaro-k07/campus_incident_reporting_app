@@ -37,3 +37,11 @@ The first build failed with "Building native assets failed". The Flutter SDK is 
 ## google_fonts 8 instead of 9 (2026-11-07)
 
 `google_fonts` 9 builds its text themes with the new `material_ui` package, so its `TextTheme` is a different type from the one `ThemeData` in Flutter 3.47 expects. The theme would not compile. I pinned `google_fonts` to `^8.2.1`, which uses Flutter's own `TextTheme`.
+
+## Profile document is created after verification (2026-11-07)
+
+CLAUDE.md says sign-up creates `users/{uid}`, but the security rules only let verified users write. So sign-up only creates the Auth account and sends the email. The profile document (role `student`) is created the first time a verified user opens the app. After "I have verified", the app also asks Firebase for a fresh ID token, because the rules read `email_verified` from the token and the old token still says false.
+
+## Live role changes (2026-11-07)
+
+`AuthCubit` listens to the user's Firestore document, not just the login state. When `role` is changed in the Firebase Console, the app switches between the student and staff screens straight away. This makes it possible to show both roles in the demo with one account.

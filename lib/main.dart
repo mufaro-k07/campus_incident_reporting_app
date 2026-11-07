@@ -6,6 +6,8 @@ import 'app.dart';
 import 'cubits/auth/auth_cubit.dart';
 import 'firebase_options.dart';
 import 'repositories/auth_repository.dart';
+import 'repositories/image_upload_service.dart';
+import 'repositories/incident_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +17,13 @@ Future<void> main() async {
 
   runApp(
     MultiRepositoryProvider(
-      providers: [RepositoryProvider.value(value: authRepository)],
+      providers: [
+        RepositoryProvider.value(value: authRepository),
+        RepositoryProvider(create: (_) => IncidentRepository()),
+        RepositoryProvider<ImageUploadService>(
+          create: (_) => CloudinaryImageService(),
+        ),
+      ],
       child: BlocProvider(
         create: (_) => AuthCubit(authRepository),
         child: const CampusIncidentApp(),

@@ -33,3 +33,7 @@ The Android emulator would not start until virtualisation was enabled in the BIO
 ## Build failed because of a space in the Flutter path (2026-11-07)
 
 The first build failed with "Building native assets failed". The Flutter SDK is in `C:\Users\Petros Kunze\flutter`, and the space in the path breaks a build step of the `objective_c` package. That package comes from `path_provider_foundation`, an iOS/macOS plugin pulled in by `google_fonts`. I pinned `path_provider_foundation` to 2.5.1, which does not use `objective_c`. Installing Flutter in a path without spaces (for example `C:\flutter`) would avoid this.
+
+## google_fonts 8 instead of 9 (2026-11-07)
+
+`google_fonts` 9 builds its text themes with the new `material_ui` package, so its `TextTheme` is a different type from the one `ThemeData` in Flutter 3.47 expects. The theme would not compile. I pinned `google_fonts` to `^8.2.1`, which uses Flutter's own `TextTheme`.

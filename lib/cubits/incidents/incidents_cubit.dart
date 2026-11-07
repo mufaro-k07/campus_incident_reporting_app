@@ -46,6 +46,15 @@ class IncidentsCubit extends Cubit<IncidentsState> {
     emit(state.copyWith(showOnlyMine: onlyMine));
   }
 
+  Future<bool> deleteIncident(String incidentId) async {
+    try {
+      await _incidentRepository.deleteIncident(incidentId);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   Future<void> close() async {
     await _incidentsSubscription?.cancel();

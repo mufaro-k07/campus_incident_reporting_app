@@ -8,6 +8,7 @@ import '../../core/utils/validators.dart';
 import '../../cubits/auth/auth_cubit.dart';
 import '../../cubits/report_form/report_form_cubit.dart';
 import '../../cubits/report_form/report_form_state.dart';
+import '../../models/incident.dart';
 import '../../models/incident_category.dart';
 import '../../repositories/image_upload_service.dart';
 import '../../repositories/incident_repository.dart';
@@ -18,9 +19,11 @@ import '../../widgets/category_selector.dart';
 import '../../widgets/photo_field.dart';
 
 class ReportIncidentScreen extends StatefulWidget {
-  const ReportIncidentScreen({super.key});
+  const ReportIncidentScreen({super.key, this.incidentToEdit});
 
-  static Future<void> open(BuildContext context) {
+  final Incident? incidentToEdit;
+
+  static Future<void> open(BuildContext context, {Incident? incidentToEdit}) {
     final reporter = context.read<AuthCubit>().state.user!;
     return Navigator.of(context).push(
       MaterialPageRoute(
@@ -29,8 +32,9 @@ class ReportIncidentScreen extends StatefulWidget {
             incidentRepository: context.read<IncidentRepository>(),
             imageUploadService: context.read<ImageUploadService>(),
             reporter: reporter,
+            incidentToEdit: incidentToEdit,
           ),
-          child: const ReportIncidentScreen(),
+          child: ReportIncidentScreen(incidentToEdit: incidentToEdit),
         ),
       ),
     );
@@ -46,6 +50,24 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
   final _descriptionController = TextEditingController();
   IncidentCategory? _category;
   String? _location;
+  String? _savedPhotoUrl;
+
+  bool get _isEditing => widget.incidentToEdit != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final incident = widget.incidentToEdit;
+    if (incident != null) {
+      _titleController.text = incident.title;
+      _descriptionController.text = incident.description;
+      _category = incident.category;
+      _location = campusLocations.contains(incident.location)
+          ? incident.location
+          : null;
+      _savedPhotoUrl = incident.photoUrl;
+    }
+  }
 
   @override
   void dispose() {
@@ -77,6 +99,11 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
     }
   }
 
+  void _removePhoto() {
+    setState(() => _savedPhotoUrl = null);
+    context.read<ReportFormCubit>().removePhoto();
+  }
+
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
@@ -85,12 +112,16 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
       description: _descriptionController.text.trim(),
       category: _category!,
       location: _location!,
+      savedPhotoUrl: _savedPhotoUrl,
     );
   }
 
   void _onFormStateChanged(BuildContext context, ReportFormState state) {
     if (state.status == ReportFormStatus.success) {
-      showAppSnackBar(context, 'Report submitted. Thank you!');
+      showAppSnackBar(
+        context,
+        _isEditing ? 'Changes saved.' : 'Report submitted. Thank you!',
+      );
       Navigator.of(context).pop();
     } else if (state.status == ReportFormStatus.failure) {
       showAppSnackBar(context, state.errorMessage!, isError: true);
@@ -102,7 +133,9 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
     return BlocListener<ReportFormCubit, ReportFormState>(
       listener: _onFormStateChanged,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Report an Issue')),
+        appBar: AppBar(
+          title: Text(_isEditing ? 'Edit Report' : 'Report an Issue'),
+        ),
         body: Form(
           key: _formKey,
           child: ListView(
@@ -162,14 +195,15 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                     previous.photo != current.photo,
                 builder: (context, state) => PhotoField(
                   photo: state.photo,
+                  photoUrl: _savedPhotoUrl,
                   onAddPhoto: _addPhoto,
-                  onRemovePhoto: context.read<ReportFormCubit>().removePhoto,
+                  onRemovePhoto: _removePhoto,
                 ),
               ),
               const SizedBox(height: 28),
               BlocBuilder<ReportFormCubit, ReportFormState>(
                 builder: (context, state) => AppButton(
-                  label: 'Submit Report',
+                  label: _isEditing ? 'Save Changes' : 'Submit Report',
                   isLoading: state.isSubmitting,
                   onPressed: _submit,
                 ),

@@ -25,7 +25,11 @@ class _StudentShellState extends State<StudentShell> {
     return Scaffold(
       body: IndexedStack(
         index: _selectedTab,
-        children: const [HomeScreen(), ReportsScreen(), ProfileScreen()],
+        children: [
+          HomeScreen(onSeeAllReports: () => _selectTab(1)),
+          const ReportsScreen(),
+          const ProfileScreen(),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Report an incident',

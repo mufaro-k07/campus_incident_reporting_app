@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../core/constants.dart';
 import '../../models/app_user.dart';
+import '../../models/incident.dart';
 import '../../models/incident_category.dart';
 import '../../repositories/image_upload_service.dart';
 import '../../repositories/incident_repository.dart';
@@ -13,11 +14,13 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     required this._incidentRepository,
     required this._imageUploadService,
     required this._reporter,
+    this._incidentToEdit,
   }) : super(const ReportFormState());
 
   final IncidentRepository _incidentRepository;
   final ImageUploadService _imageUploadService;
   final AppUser _reporter;
+  final Incident? _incidentToEdit;
 
   Future<void> setPhoto(XFile photo) async {
     final sizeInBytes = await photo.length();
@@ -44,11 +47,12 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     required String description,
     required IncidentCategory category,
     required String location,
+    String? savedPhotoUrl,
   }) async {
     final photo = state.photo;
     emit(ReportFormState(status: ReportFormStatus.submitting, photo: photo));
 
-    String? photoUrl;
+    var photoUrl = savedPhotoUrl;
     if (photo != null) {
       try {
         photoUrl = await _imageUploadService.uploadImage(photo);
@@ -67,14 +71,26 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     }
 
     try {
-      await _incidentRepository.createIncident(
-        title: title,
-        description: description,
-        category: category,
-        location: location,
-        reporter: _reporter,
-        photoUrl: photoUrl,
-      );
+      final incidentToEdit = _incidentToEdit;
+      if (incidentToEdit == null) {
+        await _incidentRepository.createIncident(
+          title: title,
+          description: description,
+          category: category,
+          location: location,
+          reporter: _reporter,
+          photoUrl: photoUrl,
+        );
+      } else {
+        await _incidentRepository.updateIncident(
+          incidentId: incidentToEdit.id,
+          title: title,
+          description: description,
+          category: category,
+          location: location,
+          photoUrl: photoUrl,
+        );
+      }
       emit(const ReportFormState(status: ReportFormStatus.success));
     } catch (_) {
       emit(

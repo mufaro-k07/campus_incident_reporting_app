@@ -9,31 +9,45 @@ class PhotoField extends StatelessWidget {
   const PhotoField({
     super.key,
     required this.photo,
+    required this.photoUrl,
     required this.onAddPhoto,
     required this.onRemovePhoto,
   });
 
   final XFile? photo;
+  final String? photoUrl;
   final VoidCallback onAddPhoto;
   final VoidCallback onRemovePhoto;
 
   @override
   Widget build(BuildContext context) {
-    final selectedPhoto = photo;
-    if (selectedPhoto == null) return _AddPhotoButton(onTap: onAddPhoto);
+    final newPhoto = photo;
+    final savedPhotoUrl = photoUrl;
+
+    final Widget preview;
+    if (newPhoto != null) {
+      preview = Image.file(
+        File(newPhoto.path),
+        height: 200,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        semanticLabel: 'Selected photo',
+      );
+    } else if (savedPhotoUrl != null) {
+      preview = Image.network(
+        savedPhotoUrl,
+        height: 200,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        semanticLabel: 'Current photo',
+      );
+    } else {
+      return _AddPhotoButton(onTap: onAddPhoto);
+    }
 
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Image.file(
-            File(selectedPhoto.path),
-            height: 200,
-            width: double.infinity,
-            fit: BoxFit.cover,
-            semanticLabel: 'Selected photo',
-          ),
-        ),
+        ClipRRect(borderRadius: BorderRadius.circular(16), child: preview),
         Positioned(
           top: 8,
           right: 8,
@@ -58,6 +72,7 @@ class _AddPhotoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Material(
       color: AppColors.surface,
       shape: RoundedRectangleBorder(
@@ -81,13 +96,13 @@ class _AddPhotoButton extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Add a photo',
-                style: Theme.of(context).textTheme.labelLarge
-                    ?.copyWith(color: AppColors.primary),
+                style: textTheme.labelLarge?.copyWith(color: AppColors.primary),
               ),
               Text(
                 'Optional, up to 5 MB',
-                style: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: AppColors.textSecondary),
+                style: textTheme.bodySmall?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
             ],
           ),

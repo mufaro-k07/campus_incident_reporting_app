@@ -7,10 +7,12 @@ import '../../cubits/auth/auth_cubit.dart';
 import '../../cubits/incidents/incidents_cubit.dart';
 import '../../models/incident.dart';
 import '../../widgets/app_button.dart';
+import '../../widgets/app_snack_bar.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/status_timeline.dart';
 import '../staff/update_status_sheet.dart';
+import '../student/report_incident_screen.dart';
 
 class IncidentDetailsScreen extends StatelessWidget {
   const IncidentDetailsScreen({super.key, required this.incidentId});
@@ -30,19 +32,75 @@ class IncidentDetailsScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _confirmDelete(BuildContext context, Incident incident) async {
+    final incidentsCubit = context.read<IncidentsCubit>();
+    final navigator = Navigator.of(context);
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete this report?'),
+        content: const Text('This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (!(shouldDelete ?? false)) return;
+
+    final wasDeleted = await incidentsCubit.deleteIncident(incident.id);
+    if (!context.mounted) return;
+    if (wasDeleted) {
+      showAppSnackBar(context, 'Report deleted.');
+      navigator.pop();
+    } else {
+      showAppSnackBar(
+        context,
+        'Could not delete the report. Please try again.',
+        isError: true,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final incident = context.select(
       (IncidentsCubit cubit) => cubit.state.findById(incidentId),
     );
-    final isStaff = context.select(
-      (AuthCubit cubit) => cubit.state.user?.isStaff ?? false,
-    );
+    final currentUser = context.select((AuthCubit cubit) => cubit.state.user);
+    final isStaff = currentUser?.isStaff ?? false;
+    final canEditOrDelete =
+        incident != null &&
+        incident.reporterId == currentUser?.uid &&
+        incident.canBeChangedByReporter;
     final canUpdateStatus =
         isStaff && incident != null && incident.status.next != null;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Report details')),
+      appBar: AppBar(
+        title: const Text('Report details'),
+        actions: [
+          if (canEditOrDelete) ...[
+            IconButton(
+              tooltip: 'Edit report',
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () =>
+                  ReportIncidentScreen.open(context, incidentToEdit: incident),
+            ),
+            IconButton(
+              tooltip: 'Delete report',
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () => _confirmDelete(context, incident),
+            ),
+          ],
+        ],
+      ),
       body: incident == null
           ? const EmptyState(
               icon: Icons.delete_outline,

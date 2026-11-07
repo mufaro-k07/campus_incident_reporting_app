@@ -53,3 +53,7 @@ CLAUDE.md says sign-up creates `users/{uid}`, but the security rules only let ve
 ## devAllowAnyEmail switched off (2026-11-07)
 
 `devAllowAnyEmail` is now `false` and the strict rules are deployed. A non-ALU email now gets "Use your ALU email" on the login and sign-up forms, and the rules refuse it on the server even if the app check were skipped.
+
+## Testing approach (2026-11-07)
+
+Pure Dart code (validators, the filter function and the models) has plain unit tests. Cubits are tested with `bloc_test` and fake repositories from `mocktail`, so no network is needed. `IncidentRepository` is tested against `fake_cloud_firestore`, which also checks the status history update. The report form has a widget test. The security rules were checked against the real deployed database through the REST API, and every screen was tried on the Android emulator with a student account and a staff account.

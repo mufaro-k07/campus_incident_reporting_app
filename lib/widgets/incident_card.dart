@@ -6,10 +6,10 @@ import '../models/incident.dart';
 import 'status_chip.dart';
 
 class IncidentCard extends StatelessWidget {
-  const IncidentCard({super.key, required this.incident, this.onTap});
+  const IncidentCard({super.key, required this.incident, required this.onTap});
 
   final Incident incident;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

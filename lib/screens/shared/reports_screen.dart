@@ -8,6 +8,7 @@ import '../../cubits/incidents/incidents_state.dart';
 import '../../models/incident_status.dart';
 import '../../widgets/incident_filter_bar.dart';
 import '../../widgets/incident_results_sliver.dart';
+import 'incident_details_screen.dart';
 
 class ReportsScreen extends StatelessWidget {
   const ReportsScreen({super.key});
@@ -37,7 +38,11 @@ class ReportsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              IncidentResultsSliver(state: state),
+              IncidentResultsSliver(
+                state: state,
+                onIncidentTap: (incident) =>
+                    IncidentDetailsScreen.open(context, incident.id),
+              ),
             ],
           );
         },

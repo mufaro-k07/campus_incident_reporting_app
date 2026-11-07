@@ -40,3 +40,19 @@ String? validateConfirmPassword(String? value, String password) {
   if (value != password) return 'Passwords do not match';
   return null;
 }
+
+String? validateTitle(String? value) {
+  final title = value?.trim() ?? '';
+  if (title.isEmpty) return 'Enter a short title';
+  if (title.length < 5) return 'Title must be at least 5 characters';
+  return null;
+}
+
+String? validateDescription(String? value) {
+  final description = value?.trim() ?? '';
+  if (description.isEmpty) return 'Describe the issue';
+  if (description.length < 10) {
+    return 'Describe the issue in at least 10 characters';
+  }
+  return null;
+}

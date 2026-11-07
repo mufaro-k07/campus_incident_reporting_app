@@ -78,4 +78,26 @@ void main() {
       expect(validateName('Mufaro Kunze'), isNull);
     });
   });
+
+  group('validateTitle', () {
+    test('rejects an empty or very short title', () {
+      expect(validateTitle(''), isNotNull);
+      expect(validateTitle('Tap'), isNotNull);
+    });
+
+    test('accepts a normal title', () {
+      expect(validateTitle('Leaking tap'), isNull);
+    });
+  });
+
+  group('validateDescription', () {
+    test('rejects an empty or very short description', () {
+      expect(validateDescription('  '), isNotNull);
+      expect(validateDescription('Broken'), isNotNull);
+    });
+
+    test('accepts a clear description', () {
+      expect(validateDescription('The tap will not stop running.'), isNull);
+    });
+  });
 }

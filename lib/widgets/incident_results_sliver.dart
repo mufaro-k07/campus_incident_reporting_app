@@ -13,10 +13,12 @@ class IncidentResultsSliver extends StatelessWidget {
   const IncidentResultsSliver({
     super.key,
     required this.state,
+    required this.incidents,
     required this.onIncidentTap,
   });
 
   final IncidentsState state;
+  final List<Incident> incidents;
   final ValueChanged<Incident> onIncidentTap;
 
   @override
@@ -33,7 +35,6 @@ class IncidentResultsSliver extends StatelessWidget {
           ),
         );
       case IncidentsStatus.loaded:
-        final incidents = state.visibleIncidents;
         if (incidents.isEmpty) {
           return const SliverFillRemaining(
             hasScrollBody: false,

@@ -64,6 +64,7 @@ class StaffDashboardScreen extends StatelessWidget {
               ),
               IncidentResultsSliver(
                 state: state,
+                incidents: state.allMatchingIncidents,
                 onIncidentTap: (incident) =>
                     IncidentDetailsScreen.open(context, incident.id),
               ),

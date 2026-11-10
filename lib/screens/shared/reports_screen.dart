@@ -40,6 +40,7 @@ class ReportsScreen extends StatelessWidget {
               ),
               IncidentResultsSliver(
                 state: state,
+                incidents: state.visibleIncidents,
                 onIncidentTap: (incident) =>
                     IncidentDetailsScreen.open(context, incident.id),
               ),

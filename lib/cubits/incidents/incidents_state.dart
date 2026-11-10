@@ -36,6 +36,17 @@ class IncidentsState extends Equatable {
     );
   }
 
+  // The staff Dashboard always lists everyone's reports, even when Mine
+  // was picked on the Reports tab.
+  List<Incident> get allMatchingIncidents {
+    return filterIncidents(
+      incidents,
+      searchText: searchText,
+      status: statusFilter,
+      category: categoryFilter,
+    );
+  }
+
   List<Incident> get myIncidents {
     return incidents
         .where((incident) => incident.reporterId == currentUserId)

@@ -89,4 +89,19 @@ void main() {
       expect(cubit.state.statusFilter, isNull);
     },
   );
+
+  test('the Dashboard list ignores Mine but keeps the other filters', () {
+    final state = IncidentsState(
+      currentUserId: 'me',
+      status: IncidentsStatus.loaded,
+      incidents: [mine, someoneElses],
+      showOnlyMine: true,
+    );
+
+    expect(state.allMatchingIncidents, [mine, someoneElses]);
+    expect(
+      state.withStatusFilter(IncidentStatus.resolved).allMatchingIncidents,
+      [someoneElses],
+    );
+  });
 }

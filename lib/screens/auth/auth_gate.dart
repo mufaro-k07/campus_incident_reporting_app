@@ -32,8 +32,10 @@ class AuthGate extends StatelessWidget {
             // Created only after login, so the Firestore stream stops when
             // this widget is removed at sign-out. Otherwise the stream would
             // throw permission errors once the user is signed out.
+            // The role is part of the key so a role change starts a fresh
+            // cubit, and filters picked as a student do not carry over.
             return BlocProvider(
-              key: ValueKey(user.uid),
+              key: ValueKey('${user.uid}-${user.role.name}'),
               create: (context) => IncidentsCubit(
                 incidentRepository: context.read<IncidentRepository>(),
                 currentUserId: user.uid,

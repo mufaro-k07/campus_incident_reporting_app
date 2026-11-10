@@ -65,3 +65,7 @@ I replaced the teal and sand palette with royal blue (`#1A0088`), tangerine (`#F
 ## Alerts tab and balanced bottom bar (2026-11-07)
 
 The student bottom bar now has four items, two on each side of the Report button: Home and Reports, then Alerts and Profile. Every item has the same fixed width and the Row uses `spaceBetween`, so the Report button sits exactly in the centre. Tabs are an enum (`StudentTab`) instead of plain numbers, so `_selectTab(StudentTab.alerts)` reads better than `_selectTab(2)`. Alerts are built on the phone from the `statusHistory` of my own reports, because push notifications would need Cloud Functions, which need the paid Blaze plan.
+
+## Dashboard showed only my own report (2026-11-10)
+
+After I switched my account from student to staff, the staff Dashboard listed only my one report, while its summary card said 10. The All | Mine filter lives in `IncidentsCubit`, which the Reports tab and the Dashboard share, and "See all" on the student Home turns Mine on. The cubit was kept when only the role changed, because its key in `AuthGate` was just the uid, and the Dashboard has no switch to turn Mine off. Now the key also includes the role, so a role change starts with fresh filters, and the Dashboard uses `allMatchingIncidents`, which ignores Mine. Lesson: when two screens share one filter state, check that each screen can see and undo that filter.
